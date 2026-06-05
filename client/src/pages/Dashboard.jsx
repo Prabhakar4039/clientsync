@@ -149,18 +149,18 @@ const Dashboard = () => {
 
   // 4. Team Productivity Radar Chart
   const radarChartData = {
-    labels: data?.teamProductivity?.slice(0, 6).map(t => t.name.split(' ')[0]) || ['James', 'Sophia', 'Robert', 'Scarlett', 'Chris', 'Mark'],
+    labels: data?.teamProductivity?.slice(0, 6)?.map(t => t.name.split(' ')[0]) || ['James', 'Sophia', 'Robert', 'Scarlett', 'Chris', 'Mark'],
     datasets: [
       {
         label: 'Tasks Assigned',
-        data: data?.teamProductivity?.slice(0, 6).map(t => t.totalTasks) || [10, 8, 12, 7, 9, 6],
+        data: data?.teamProductivity?.slice(0, 6)?.map(t => t.totalTasks) || [10, 8, 12, 7, 9, 6],
         backgroundColor: 'rgba(99, 102, 241, 0.15)',
         borderColor: '#6366f1',
         borderWidth: 1,
       },
       {
         label: 'Tasks Completed',
-        data: data?.teamProductivity?.slice(0, 6).map(t => t.completedTasks) || [8, 6, 9, 5, 8, 4],
+        data: data?.teamProductivity?.slice(0, 6)?.map(t => t.completedTasks) || [8, 6, 9, 5, 8, 4],
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
         borderColor: '#10b981',
         borderWidth: 1,

@@ -321,7 +321,7 @@ const Projects = () => {
                       {/* Team Avatars */}
                       <div className="flex items-center justify-between">
                         <div className="flex -space-x-1.5 overflow-hidden">
-                          {project.team?.slice(0, 4).map((member) => (
+                          {project.team?.slice(0, 4)?.map((member) => (
                             <img
                               key={member._id}
                               className="inline-block h-6.5 w-6.5 rounded-full bg-zinc-200 dark:bg-zinc-800 ring-2 ring-white dark:ring-zinc-900 object-cover"
