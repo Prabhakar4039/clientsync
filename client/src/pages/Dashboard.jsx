@@ -4,6 +4,7 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  RadialLinearScale,
   PointElement,
   LineElement,
   BarElement,
@@ -29,6 +30,7 @@ import { useAuth } from '../context/AuthContext';
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  RadialLinearScale,
   PointElement,
   LineElement,
   BarElement,
