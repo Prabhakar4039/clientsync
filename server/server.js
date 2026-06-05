@@ -40,13 +40,20 @@ app.use('/api/activities', require('./routes/activities'));
 app.use('/api/team', require('./routes/team'));
 app.use('/api/reports', require('./routes/reports'));
 
-// Direct file path serve check (for local development testing)
-app.use(express.static(path.join(__dirname, '../client/dist')));
+const fs = require('fs');
 
-// Fallback index.html mapping for client router
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-});
+// Direct file path serve check (for local development testing)
+const clientDistPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+} else {
+  app.get('*', (req, res) => {
+    res.json({ success: true, message: 'ClientSync Agency Platform API is live!' });
+  });
+}
 
 // Auto-seed database check
 const autoSeed = async () => {
