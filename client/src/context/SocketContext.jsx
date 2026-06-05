@@ -18,8 +18,9 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    // Connect using Vite proxy configuration
-    const newSocket = io(window.location.origin, {
+    // Connect using Vite proxy configuration (or production Render API URL)
+    const backendUrl = import.meta.env.VITE_API_URL || window.location.origin;
+    const newSocket = io(backendUrl, {
       transports: ['websocket', 'polling'],
     });
     
