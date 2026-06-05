@@ -106,6 +106,8 @@ exports.updateTeamMember = async (req, res) => {
     member = await User.findByIdAndUpdate(
       req.params.id,
       {
+        name: req.body.name,
+        email: req.body.email,
         role: req.body.role,
         department: req.body.department,
         performance: req.body.performance,
@@ -118,7 +120,7 @@ exports.updateTeamMember = async (req, res) => {
       userId: req.user._id,
       userName: req.user.name,
       action: 'Team Member Updated',
-      details: `Updated role/department of team member ${member.name}`,
+      details: `Updated details of team member ${member.name}`,
       entityType: 'User',
       entityId: member._id,
     });

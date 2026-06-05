@@ -22,6 +22,7 @@ const Team = () => {
     password: '',
     role: 'Team Member',
     department: 'Development',
+    efficiency: 90,
   });
 
   const isAdmin = user?.role === 'Admin';
@@ -53,6 +54,7 @@ const Team = () => {
       password: '',
       role: 'Team Member',
       department: 'Development',
+      efficiency: 90,
     });
     setError('');
     setSuccess('');
@@ -67,6 +69,7 @@ const Team = () => {
       password: '', // blank during edit
       role: member.role || 'Team Member',
       department: member.department || 'Development',
+      efficiency: member.performance?.efficiency || 90,
     });
     setError('');
     setSuccess('');
@@ -80,10 +83,16 @@ const Team = () => {
 
     try {
       if (editingMember) {
-        // Update role and department
+        // Update role, department, name, email, and efficiency
         const res = await axios.put(`/api/team/${editingMember._id}`, {
+          name: formData.name,
+          email: formData.email,
           role: formData.role,
           department: formData.department,
+          performance: {
+            ...editingMember.performance,
+            efficiency: Number(formData.efficiency),
+          },
         });
         if (res.data.success) {
           setSuccess('Team member updated successfully!');
@@ -254,43 +263,41 @@ const Team = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g. John Doe"
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Email Address *</label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="name@company.com"
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
+                />
+              </div>
               {!editingMember && (
-                <>
-                  <div>
-                    <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g. John Doe"
-                      className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Email Address *</label>
-                    <input
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="name@company.com"
-                      className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Password *</label>
-                    <input
-                      type="password"
-                      required
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      placeholder="•••••••• (Min 6 chars)"
-                      className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
-                      minLength="6"
-                    />
-                  </div>
-                </>
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Password *</label>
+                  <input
+                    type="password"
+                    required
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    placeholder="•••••••• (Min 6 chars)"
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
+                    minLength="6"
+                  />
+                </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
@@ -321,6 +328,20 @@ const Team = () => {
                     <option value="Management">Management</option>
                   </select>
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Performance Efficiency (%) *</label>
+                <input
+                  type="number"
+                  required
+                  min="0"
+                  max="100"
+                  value={formData.efficiency}
+                  onChange={(e) => setFormData({ ...formData, efficiency: e.target.value })}
+                  placeholder="e.g. 90"
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-xl text-zinc-900 dark:text-white focus:outline-none"
+                />
               </div>
 
               {/* Actions */}
