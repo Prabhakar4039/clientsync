@@ -4,7 +4,7 @@ import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import { 
   Plus, Search, Filter, Calendar, MessageSquare, Tag, 
-  Trash2, X, PlusCircle, User, Clock, CheckCircle2, ShieldAlert
+  Trash2, X, PlusCircle, User, Clock, CheckCircle2, ShieldAlert, FolderOpen
 } from 'lucide-react';
 
 const Tasks = () => {
@@ -73,13 +73,18 @@ const Tasks = () => {
         setProjects(projRes.data.data);
         if (projRes.data.data.length > 0 && !selectedProjectId) {
           setSelectedProjectId(projRes.data.data[0]._id);
+        } else if (projRes.data.data.length === 0) {
+          setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
       if (teamRes.data.success) {
         setTeamMembers(teamRes.data.data);
       }
     } catch (err) {
       console.error('Error loading tasks selectors:', err.message);
+      setLoading(false);
     }
   };
 
@@ -285,12 +290,17 @@ const Tasks = () => {
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
             className="text-lg font-bold bg-transparent border-0 font-display text-zinc-900 dark:text-white focus:outline-none focus:ring-0 cursor-pointer pr-8"
+            disabled={projects.length === 0}
           >
-            {projects.map((p) => (
-              <option key={p._id} value={p._id} className="bg-white dark:bg-zinc-950 font-sans text-sm">
-                📁 {p.name}
-              </option>
-            ))}
+            {projects.length === 0 ? (
+              <option value="">No Projects Assigned</option>
+            ) : (
+              projects.map((p) => (
+                <option key={p._id} value={p._id} className="bg-white dark:bg-zinc-950 font-sans text-sm">
+                  📁 {p.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
 
@@ -340,6 +350,12 @@ const Tasks = () => {
       {loading ? (
         <div className="flex h-96 items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-indigo-500"></div>
+        </div>
+      ) : projects.length === 0 ? (
+        <div className="text-center py-20 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl">
+          <FolderOpen className="mx-auto h-12 w-12 text-zinc-400" />
+          <p className="text-sm font-semibold mt-4 text-zinc-900 dark:text-white">No projects assigned</p>
+          <p className="text-xs text-zinc-500 mt-1">You need to be assigned to a project to view and manage tasks.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4 overflow-x-auto pb-4">
